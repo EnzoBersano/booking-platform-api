@@ -1,6 +1,11 @@
 server:
   port: ${SPRING_PORT}
 
+app:
+  jwt:
+    secret: ${JWT_SECRET}
+    expiration-ms: ${EXPIRATION_TIME}
+
 spring:
   datasource:
     url: ${DATABASE_URL}
@@ -12,3 +17,10 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: false
+    properties:
+        hibernate:
+          dialect: org.hibernate.dialect.PostgreSQLDialect
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
