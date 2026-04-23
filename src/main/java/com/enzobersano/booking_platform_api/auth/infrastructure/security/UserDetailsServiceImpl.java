@@ -30,7 +30,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             throw new UsernameNotFoundException("Malformed email: " + rawEmail);
         }
 
-        return userRepository.findByEmail(emailResult.getValue())
+        return userRepository.findByEmail(emailResult.value())
                 .map(user -> new User(
                         user.email().value(),
                         user.password().value(),

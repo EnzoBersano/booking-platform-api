@@ -49,7 +49,7 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
 
     private User toDomain(UserJpaEntity e) {
         // Email.of() is safe here — data was validated on write path
-        var email    = Email.of(e.email()).getValue();
+        var email    = Email.of(e.email()).value();
         var password = new HashedPassword(e.passwordHash());
         return User.reconstitute(e.id(), email, password, e.role(), e.createdAt(), e.isActive());
     }

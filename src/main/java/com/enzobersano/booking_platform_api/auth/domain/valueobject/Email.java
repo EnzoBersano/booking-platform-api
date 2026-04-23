@@ -1,8 +1,7 @@
 package com.enzobersano.booking_platform_api.auth.domain.valueobject;
 
+import com.enzobersano.booking_platform_api.auth.domain.AuthFailure;
 import com.enzobersano.booking_platform_api.shared.result.Result;
-import com.enzobersano.booking_platform_api.shared.result.ValidationError;
-
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -17,14 +16,21 @@ public final class Email {
         this.value = value;
     }
 
-    public static Result<Email> of(String raw) {
+    public static Result<Email, AuthFailure> of(String raw) {
         if (raw == null || raw.isBlank()) {
-            return Result.failure(new ValidationError("Email must not be blank"));
+            return Result.failure(
+                    new AuthFailure.InvalidEmailFormat()
+            );
         }
+
         var normalized = raw.toLowerCase().trim();
+
         if (!PATTERN.matcher(normalized).matches()) {
-            return Result.failure(new ValidationError("Invalid email format: " + raw));
+            return Result.failure(
+                    new AuthFailure.InvalidEmailFormat()
+            );
         }
+
         return Result.success(new Email(normalized));
     }
 

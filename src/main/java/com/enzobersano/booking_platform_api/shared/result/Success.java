@@ -1,6 +1,6 @@
 package com.enzobersano.booking_platform_api.shared.result;
 
-public final class Success<T> implements Result<T> {
+public final class Success<T, E extends Failure> implements Result<T, E> {
 
     private final T value;
 
@@ -9,10 +9,10 @@ public final class Success<T> implements Result<T> {
     }
 
     @Override public boolean isSuccess() { return true; }
-    @Override public T getValue()        { return value; }
 
-    @Override
-    public Error getError() {
+    @Override public T value() { return value; }
+
+    @Override public E error() {
         throw new IllegalStateException("No error in success");
     }
 }

@@ -3,8 +3,7 @@ package com.enzobersano.booking_platform_api.auth.application;
 import com.enzobersano.booking_platform_api.auth.application.command.LoginCommand;
 import com.enzobersano.booking_platform_api.auth.application.port.TokenPort;
 import com.enzobersano.booking_platform_api.auth.application.port.UserRepositoryPort;
-import com.enzobersano.booking_platform_api.shared.result.AccountDisabled;
-import com.enzobersano.booking_platform_api.shared.result.InvalidCredentials;
+import com.enzobersano.booking_platform_api.auth.domain.AuthFailure;
 import com.enzobersano.booking_platform_api.auth.domain.valueobject.Email;
 import com.enzobersano.booking_platform_api.shared.result.Result;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,33 +26,41 @@ public class LoginUserUseCase {
     }
 
     @Transactional(readOnly = true)
-    public Result<String> execute(LoginCommand command) {
+    public Result<String, AuthFailure> execute(LoginCommand command) {
 
-        // 1. Parse email — return generic error to avoid user enumeration
+        // 1. Email
         var emailResult = Email.of(command.email());
         if (!emailResult.isSuccess()) {
-            return Result.failure(new InvalidCredentials());
+            return Result.failure(
+                    new AuthFailure.InvalidCredentials()
+            );
         }
 
-        // 2. Look up user
-        var maybeUser = userRepository.findByEmail(emailResult.getValue());
+        // 2. User lookup
+        var maybeUser = userRepository.findByEmail(emailResult.value());
         if (maybeUser.isEmpty()) {
-            return Result.failure(new InvalidCredentials());
+            return Result.failure(
+                    new AuthFailure.InvalidCredentials()
+            );
         }
 
         var user = maybeUser.get();
 
-        // 3. Check account status before password verification (fail fast)
+        // 3. Status
         if (!user.isActive()) {
-            return Result.failure(new AccountDisabled());
+            return Result.failure(
+                    new AuthFailure.AccountDisabled()
+            );
         }
 
-        // 4. Constant-time BCrypt comparison
+        // 4. Password
         if (!passwordEncoder.matches(command.rawPassword(), user.password().value())) {
-            return Result.failure(new InvalidCredentials());
+            return Result.failure(
+                    new AuthFailure.InvalidCredentials()
+            );
         }
 
-        // 5. Issue token
+        // 5. Token
         return Result.success(tokenPort.generateToken(user));
     }
 }

@@ -6,18 +6,36 @@ import com.enzobersano.booking_platform_api.shared.result.Failure;
  * Auth-specific failure subtypes.
  * Controllers map these to HTTP status codes — nothing else needs to know about HTTP here.
  */
-public sealed interface AuthFailure implements Failure
-        permits AuthFailure.EmailAlreadyExists,
+public sealed interface AuthFailure extends Failure
+        permits AuthFailure.AccountDisabled,
         AuthFailure.InvalidCredentials,
-        AuthFailure.UserNotFound,
-        AuthFailure.WeakPassword,
         AuthFailure.InvalidEmailFormat,
-        AuthFailure.AccountDisabled {
+        AuthFailure.InvalidRole,
+        AuthFailure.UserAlreadyExists,
+        AuthFailure.UserNotFound,
+        AuthFailure.WeakPassword {
 
-    record EmailAlreadyExists(String message) implements AuthFailure {}
-    record InvalidCredentials(String message) implements AuthFailure {}
-    record UserNotFound(String message)       implements AuthFailure {}
-    record WeakPassword(String message)       implements AuthFailure {}
-    record InvalidEmailFormat(String message) implements AuthFailure {}
-    record AccountDisabled(String message)    implements AuthFailure {}
+    record InvalidCredentials() implements AuthFailure {
+        public String message() { return "Invalid email or password"; }
+    }
+
+    record UserNotFound() implements AuthFailure {
+        public String message() { return "User not found"; }
+    }
+
+    record WeakPassword(String message) implements AuthFailure {}
+
+    record InvalidEmailFormat() implements AuthFailure {
+        public String message() { return "Invalid email format"; }
+    }
+
+    record AccountDisabled() implements AuthFailure {
+        public String message() { return "Account is disabled"; }
+    }
+
+    record UserAlreadyExists() implements AuthFailure {
+        public String message() { return "User already exists"; }
+    }
+
+    record InvalidRole(String message) implements AuthFailure {}
 }

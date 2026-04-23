@@ -4,12 +4,11 @@ import com.enzobersano.booking_platform_api.auth.api.dto.AuthResponse;
 import com.enzobersano.booking_platform_api.auth.api.dto.ErrorResponse;
 import com.enzobersano.booking_platform_api.auth.api.dto.LoginRequest;
 import com.enzobersano.booking_platform_api.auth.api.dto.RegisterRequest;
+import com.enzobersano.booking_platform_api.auth.api.mapper.AuthErrorMapper;
 import com.enzobersano.booking_platform_api.auth.application.LoginUserUseCase;
 import com.enzobersano.booking_platform_api.auth.application.RegisterUserUseCase;
 import com.enzobersano.booking_platform_api.auth.application.command.LoginCommand;
 import com.enzobersano.booking_platform_api.auth.application.command.RegisterUserCommand;
-import com.enzobersano.booking_platform_api.shared.result.*;
-import com.enzobersano.booking_platform_api.shared.result.Error;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.*;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -21,21 +20,24 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/api/auth")
 @Tag(name = "Authentication", description = "User registration and login")
 public class AuthController {
 
     private final RegisterUserUseCase registerUseCase;
-    private final LoginUserUseCase    loginUseCase;
+    private final LoginUserUseCase loginUseCase;
+    private final AuthErrorMapper errorMapper;
 
     public AuthController(RegisterUserUseCase registerUseCase,
-                          LoginUserUseCase loginUseCase) {
+                          LoginUserUseCase loginUseCase,
+                          AuthErrorMapper errorMapper) {
         this.registerUseCase = registerUseCase;
-        this.loginUseCase    = loginUseCase;
+        this.loginUseCase = loginUseCase;
+        this.errorMapper = errorMapper;
     }
 
     // -------------------------------------------------------------------------
-    // POST /api/v1/auth/register
+    // POST /api/auth/register
     // -------------------------------------------------------------------------
 
     @Operation(summary = "Register a new user")
@@ -55,19 +57,19 @@ public class AuthController {
         var result = registerUseCase.execute(command);
 
         if (result.isSuccess()) {
-            var user  = result.getValue();
+            var user  = result.value();
             // Issue token immediately after registration
             var login = loginUseCase.execute(new LoginCommand(request.email(), request.password()));
             return ResponseEntity
                     .status(HttpStatus.CREATED)
-                    .body(AuthResponse.of(login.getValue(), user.role().name()));
+                    .body(AuthResponse.of(login.value(), user.role().name()));
         }
 
-        return toErrorResponse(result.getError());
+        return errorMapper.toResponse(result.error());
     }
 
     // -------------------------------------------------------------------------
-    // POST /api/v1/auth/login
+    // POST /api/auth/login
     // -------------------------------------------------------------------------
 
     @Operation(summary = "Authenticate and receive a JWT")
@@ -85,37 +87,9 @@ public class AuthController {
 
         if (result.isSuccess()) {
             // Role is embedded in the token; we echo it in the response for convenience
-            return ResponseEntity.ok(AuthResponse.of(result.getValue(), "USER"));
+            return ResponseEntity.ok(AuthResponse.of(result.value(), "USER"));
         }
 
-        return toErrorResponse(result.getError());
-    }
-
-
-    private ResponseEntity<ErrorResponse> toErrorResponse(Error error) {
-
-        if (error instanceof UserAlreadyExists e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(new ErrorResponse(e.message()));
-        }
-        if (error instanceof InvalidCredentials e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new ErrorResponse(e.message()));
-        }
-        if (error instanceof AccountDisabled e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(new ErrorResponse(e.message()));
-        }
-        if (error instanceof WeakPassword e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ErrorResponse(e.message()));
-        }
-        if (error instanceof ValidationError e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ErrorResponse(e.message()));
-        }
-
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ErrorResponse("Unexpected error"));
+        return errorMapper.toResponse(result.error());
     }
 }
