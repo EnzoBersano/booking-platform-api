@@ -40,7 +40,8 @@ public class AuthController {
     // POST /api/auth/register
     // -------------------------------------------------------------------------
 
-    @Operation(summary = "Register a new user")
+    @Operation(summary = "Register a new user",
+            security = {})
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Registered successfully",
                     content = @Content(schema = @Schema(implementation = AuthResponse.class))),
@@ -72,7 +73,8 @@ public class AuthController {
     // POST /api/auth/login
     // -------------------------------------------------------------------------
 
-    @Operation(summary = "Authenticate and receive a JWT")
+    @Operation(summary = "Authenticate and receive a JWT",
+            security = {})
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Login successful",
                     content = @Content(schema = @Schema(implementation = AuthResponse.class))),
