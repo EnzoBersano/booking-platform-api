@@ -30,7 +30,7 @@ public final class Resource {
         return new Resource(id, name, type, status);
     }
 
-    public void deactivate() {
+    public void disable() {
         if (this.status == ResourceStatus.INACTIVE) return;
         this.status = ResourceStatus.INACTIVE;
     }
