@@ -2,7 +2,6 @@ package com.enzobersano.booking_platform_api.auth.infrastructure.security;
 
 import com.enzobersano.booking_platform_api.auth.application.port.UserRepositoryPort;
 import com.enzobersano.booking_platform_api.auth.domain.valueobject.Email;
-import org.jspecify.annotations.NonNull;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import org.springframework.security.core.userdetails.User;
@@ -23,7 +22,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(@NonNull String rawEmail) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String rawEmail) throws UsernameNotFoundException {
         var emailResult = Email.of(rawEmail);
 
         if (!emailResult.isSuccess()) {
