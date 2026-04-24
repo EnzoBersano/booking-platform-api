@@ -25,7 +25,7 @@ public class OpenApiConfig {
                         .contact(new Contact()
                                 .name("Enzo Bersano")
                                 .email("enzo@bookingplatform.com")
-                                .url("https://github.com/enzobersano")))
+                                .url("https://github.com/EnzoBersano")))
                 .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
                 .components(new Components()
                         .addSecuritySchemes("bearerAuth", new SecurityScheme()
