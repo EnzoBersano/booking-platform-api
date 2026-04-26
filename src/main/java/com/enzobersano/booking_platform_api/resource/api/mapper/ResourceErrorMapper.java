@@ -21,6 +21,16 @@ public class ResourceErrorMapper {
                     .body(new ErrorResponse(e.message()));
         }
 
+        if (error instanceof ResourceFailure.InvalidSortBy e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrorResponse(e.message()));
+        }
+
+        if (error instanceof ResourceFailure.InvalidSortDirection e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrorResponse(e.message()));
+        }
+
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ErrorResponse("Unexpected error"));
     }

@@ -2,16 +2,21 @@ package com.enzobersano.booking_platform_api.resource.api;
 
 import com.enzobersano.booking_platform_api.resource.api.dto.CreateResourceRequest;
 import com.enzobersano.booking_platform_api.resource.api.dto.ListResourcesRequest;
+import com.enzobersano.booking_platform_api.resource.api.mapper.ListResourcesRequestMapper;
 import com.enzobersano.booking_platform_api.resource.api.mapper.ResourceErrorMapper;
 import com.enzobersano.booking_platform_api.resource.api.mapper.ResourceResponseMapper;
 import com.enzobersano.booking_platform_api.resource.application.*;
 import com.enzobersano.booking_platform_api.resource.application.command.CreateResourceCommand;
 import com.enzobersano.booking_platform_api.resource.application.command.DisableResourceCommand;
+import com.enzobersano.booking_platform_api.resource.application.query.ListResourcesQuery;
+import com.enzobersano.booking_platform_api.resource.domain.model.ResourceSortBy;
+import com.enzobersano.booking_platform_api.resource.domain.model.ResourceSortDirection;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.*;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,19 +35,21 @@ public class ResourceController {
     private final DisableResourceUseCase disableUseCase;
     private final ResourceErrorMapper errorMapper;
     private final ResourceResponseMapper responseMapper;
+    private final ListResourcesRequestMapper listRequestMapper;
 
     public ResourceController(CreateResourceUseCase createUseCase,
                               GetResourceByIdUseCase getByIdUseCase,
                               ListResourcesUseCase listUseCase,
                               DisableResourceUseCase disableUseCase,
                               ResourceErrorMapper errorMapper,
-                              ResourceResponseMapper responseMapper) {
+                              ResourceResponseMapper responseMapper, ListResourcesRequestMapper listRequestMapper) {
         this.createUseCase = createUseCase;
         this.getByIdUseCase = getByIdUseCase;
         this.listUseCase = listUseCase;
         this.disableUseCase = disableUseCase;
         this.errorMapper = errorMapper;
         this.responseMapper = responseMapper;
+        this.listRequestMapper = listRequestMapper;
     }
 
 
@@ -102,17 +109,24 @@ public class ResourceController {
     // GET /api/resources
     // -------------------------------------------------------------------------
 
-    @Operation(summary = "List all resources")
+    @Operation(
+            summary = "List all resources",
+            description = "Returns a paginated and sortable list of resources."
+    )
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "List of resources")
+            @ApiResponse(responseCode = "200", description = "Resources retrieved successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid request parameters")
     })
     @GetMapping
-    public ResponseEntity<?> list(@Valid ListResourcesRequest request) {
+    public ResponseEntity<?> list(@ParameterObject @Valid ListResourcesRequest request) {
 
-        var result = listUseCase.execute(
-                request.pageOrDefault(),
-                request.sizeOrDefault()
-        );
+        var queryResult = listRequestMapper.toQuery(request);
+
+        if (!queryResult.isSuccess()) {
+            return errorMapper.toResponse(queryResult.error());
+        }
+
+        var result = listUseCase.execute(queryResult.value());
 
         if (result.isSuccess()) {
             return ResponseEntity.ok(
