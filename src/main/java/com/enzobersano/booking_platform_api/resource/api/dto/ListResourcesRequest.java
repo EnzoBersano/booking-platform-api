@@ -10,7 +10,11 @@ public record ListResourcesRequest(
 
         @Min(1)
         @Max(100)
-        Integer size
+        Integer size,
+
+        String sortBy,
+
+        String direction
 ) {
 
     public int pageOrDefault() {
@@ -19,5 +23,17 @@ public record ListResourcesRequest(
 
     public int sizeOrDefault() {
         return size == null ? 10 : size;
+    }
+
+    public String sortByOrDefault() {
+        return sortBy == null || sortBy.isBlank()
+                ? "name"
+                : sortBy;
+    }
+
+    public String directionOrDefault() {
+        return direction == null || direction.isBlank()
+                ? "asc"
+                : direction;
     }
 }

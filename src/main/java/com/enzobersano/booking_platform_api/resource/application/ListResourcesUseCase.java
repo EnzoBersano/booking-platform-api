@@ -1,6 +1,7 @@
 package com.enzobersano.booking_platform_api.resource.application;
 
 import com.enzobersano.booking_platform_api.resource.application.port.ResourceRepositoryPort;
+import com.enzobersano.booking_platform_api.resource.application.query.ListResourcesQuery;
 import com.enzobersano.booking_platform_api.resource.domain.failure.ResourceFailure;
 import com.enzobersano.booking_platform_api.resource.domain.model.Resource;
 import com.enzobersano.booking_platform_api.shared.pagination.PageResult;
@@ -18,7 +19,8 @@ public class ListResourcesUseCase {
     }
 
     @Transactional(readOnly = true)
-    public Result<PageResult<Resource>, ResourceFailure> execute(int page, int size) {
-        return Result.success(repository.findAll(page, size));
+    public Result<PageResult<Resource>, ResourceFailure> execute(ListResourcesQuery query) {
+
+        return Result.success(repository.findAll(query));
     }
 }
