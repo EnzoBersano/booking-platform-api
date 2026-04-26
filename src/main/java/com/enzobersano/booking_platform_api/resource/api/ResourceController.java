@@ -1,6 +1,7 @@
 package com.enzobersano.booking_platform_api.resource.api;
 
 import com.enzobersano.booking_platform_api.resource.api.dto.CreateResourceRequest;
+import com.enzobersano.booking_platform_api.resource.api.dto.ListResourcesRequest;
 import com.enzobersano.booking_platform_api.resource.api.mapper.ResourceErrorMapper;
 import com.enzobersano.booking_platform_api.resource.api.mapper.ResourceResponseMapper;
 import com.enzobersano.booking_platform_api.resource.application.*;
@@ -106,13 +107,12 @@ public class ResourceController {
             @ApiResponse(responseCode = "200", description = "List of resources")
     })
     @GetMapping
-    public ResponseEntity<?> list(
-                                  @RequestParam(defaultValue = "0") int page,
-                                  @RequestParam(defaultValue = "10") int size
-    ) {
+    public ResponseEntity<?> list(@Valid ListResourcesRequest request) {
 
-        var result = listUseCase.execute(page, size);
-
+        var result = listUseCase.execute(
+                request.pageOrDefault(),
+                request.sizeOrDefault()
+        );
 
         if (result.isSuccess()) {
             return ResponseEntity.ok(
