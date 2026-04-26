@@ -1,10 +1,12 @@
 package com.enzobersano.booking_platform_api.resource.application;
 
 import com.enzobersano.booking_platform_api.resource.application.port.ResourceRepositoryPort;
+import com.enzobersano.booking_platform_api.resource.domain.failure.ResourceFailure;
 import com.enzobersano.booking_platform_api.resource.domain.model.Resource;
+import com.enzobersano.booking_platform_api.shared.pagination.PageResult;
+import com.enzobersano.booking_platform_api.shared.result.Result;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
 
 @Service
 public class ListResourcesUseCase {
@@ -16,7 +18,7 @@ public class ListResourcesUseCase {
     }
 
     @Transactional(readOnly = true)
-    public List<Resource> execute() {
-        return repository.findAll();
+    public Result<PageResult<Resource>, ResourceFailure> execute(int page, int size) {
+        return Result.success(repository.findAll(page, size));
     }
 }

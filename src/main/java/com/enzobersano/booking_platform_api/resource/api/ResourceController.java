@@ -106,13 +106,21 @@ public class ResourceController {
             @ApiResponse(responseCode = "200", description = "List of resources")
     })
     @GetMapping
-    public ResponseEntity<?> list() {
+    public ResponseEntity<?> list(
+                                  @RequestParam(defaultValue = "0") int page,
+                                  @RequestParam(defaultValue = "10") int size
+    ) {
 
-        var resources = listUseCase.execute();
+        var result = listUseCase.execute(page, size);
 
-        return ResponseEntity.ok(
-                responseMapper.toResponseList(resources)
-        );
+
+        if (result.isSuccess()) {
+            return ResponseEntity.ok(
+                    responseMapper.toPagedResponse(result.value())
+            );
+        }
+
+        return errorMapper.toResponse(result.error());
     }
 
     // -------------------------------------------------------------------------

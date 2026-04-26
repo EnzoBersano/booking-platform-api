@@ -3,6 +3,8 @@ package com.enzobersano.booking_platform_api.resource.infrastructure.persistence
 import com.enzobersano.booking_platform_api.resource.application.port.ResourceRepositoryPort;
 import com.enzobersano.booking_platform_api.resource.domain.model.Resource;
 import com.enzobersano.booking_platform_api.resource.infrastructure.mapper.ResourceMapper;
+import com.enzobersano.booking_platform_api.shared.pagination.PageResult;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -32,10 +34,12 @@ public class ResourceRepositoryAdapter implements ResourceRepositoryPort {
     }
 
     @Override
-    public List<Resource> findAll() {
-        return jpa.findAll()
-                .stream()
-                .map(mapper::toDomain)
-                .toList();
+    public PageResult<Resource> findAll(int page, int size) {
+
+        var pageable = PageRequest.of(page, size);
+
+        var result = jpa.findAll(pageable);
+
+        return mapper.toPageResult(result);
     }
 }

@@ -1,8 +1,7 @@
 package com.enzobersano.booking_platform_api.resource.application.port;
 
 import com.enzobersano.booking_platform_api.resource.domain.model.Resource;
-
-import java.util.List;
+import com.enzobersano.booking_platform_api.shared.pagination.PageResult;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -12,5 +11,5 @@ public interface ResourceRepositoryPort {
 
     Optional<Resource> findById(UUID id);
 
-    List<Resource> findAll();
+    PageResult<Resource> findAll(int page, int size);
 }
