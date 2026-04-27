@@ -49,6 +49,22 @@ public class Booking {
                 && this.timeRange.overlaps(other.timeRange);
     }
 
+    public static Booking reconstitute(
+            UUID id,
+            UUID resourceId,
+            UUID userId,
+            TimeRange timeRange,
+            BookingStatus status
+    ) {
+        return new Booking(
+                id,
+                resourceId,
+                userId,
+                timeRange,
+                status
+        );
+    }
+
     public UUID id() { return id; }
     public UUID resourceId() { return resourceId; }
     public UUID userId() { return userId; }
