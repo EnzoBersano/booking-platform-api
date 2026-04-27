@@ -1,64 +1,95 @@
+#  Booking Platform API
 
-# Booking Platform API
+A backend system inspired by travel tech platforms like Despegar and Airbnb, focused on modeling real-world booking systems with a strong emphasis on domain design, clean architecture, and extensibility.
 
-Backend system inspired by travel platforms like Despegar, designed to explore reservation systems, availability engines and clean architecture principles.
+This project is not just CRUD — it explores how to build a reservation system with real business rules, conflict resolution, and scalable architecture patterns.
+##  Goal
 
----
+The goal is to design a realistic booking system that handles:
 
-## Goal
-
-This project aims to model a simplified but realistic booking system with:
-
-- Reservation management
-- Resource hierarchy (Composite pattern)
-- Availability engine for conflict detection
-- Domain-driven design (lightweight, practical)
+- Resource reservations with time conflicts
+- Availability validation rules (domain policies)
 - Stateless authentication (JWT)
+- Clean separation of business logic from framework concerns
+- Extensible architecture for future scaling (availability engine, distributed deployment)
 
----
+##  Architecture
 
-## Architecture
+The system follows a Hexagonal Architecture (Ports & Adapters) combined with a pragmatic DDD approach.
 
-The system follows a **DDD-inspired modular architecture**:
-```
+````
 com.enzobersano.booking_platform_api
-reservation/
-resource/
-availability/
-auth/
-shared/
-```
----
+├── booking
+├── resource
+├── auth
+├── availability (in progress)
+└── shared
+````
 
-Each module contains its own:
+Each module is structured as:
 
-- API layer: REST controllers and DTOs 
-- Application layer: use cases and orchestration
-- Domain layer: core business model (framework independent)
-- Infrastructure layer: persistence and external systems
+- **api** → REST controllers, request/response mapping
+- **application** → use cases (business orchestration)
+- **domain** → core business rules and models
+- **infrastructure** → persistence, security, external systems
 
----
+##  Key Design Decisions
 
-##  Design Principles
+### 🔹 Hexagonal Architecture
 
-- Domain-first design
-- Separation of concerns
-- No framework leakage into domain layer
-- Explicit boundaries between modules
-- Result-oriented error handling 
+Business logic is completely isolated from Spring and infrastructure through ports and adapters.
 
----
+### 🔹 Domain-driven booking rules
+
+Booking validation is centralized in a `BookingPolicy`, ensuring:
+
+- No time overlaps
+- Minimum duration constraints
+- Advance booking limits
+- Resource availability rules
+- User conflict detection
+
+### 🔹 Result-based error handling
+
+Instead of exceptions, the system uses a `Result<T, Failure>` model for explicit control flow.
+
+### 🔹 Authentication abstraction
+
+User context is resolved through a `CurrentUserPort`, decoupling security from business logic.
+
+### 🔹 Testable architecture
+
+Use cases and domain logic are fully unit-tested with Mockito and JUnit.
 
 ##  Tech Stack
 
-- Java 17
+- Java 21
 - Spring Boot
 - PostgreSQL
 - Docker
-- AWS (EC2 + ALB + ASG deployment)
+- JWT Authentication
+- Mockito + JUnit 5
+- OpenApi/Swagger
+- AWS (planned: EC2 + ALB + ASG)
 
----
+## Current Features
+
+- Booking creation with conflict detection
+- Resource management
+- Time-range validation
+- User-based booking isolation
+- Pagination and filtering
+- Role-based security (JWT)
+- Structured error handling
+
+## In Progress
+
+- Availability engine (real-time conflict resolution layer)
+- AWS deployment (EC2 + load balancing)
+- Architecture diagram (cloud + modules)
+- Advanced booking rules (capacity, dynamic pricing-ready model)
 
 ##  Status
 
-Early architecture phase – domain modeling in progress.
+This project is in active architectural development, focusing on backend system design, scalability patterns, 
+and production-ready structure rather than simple CRUD implementation.
