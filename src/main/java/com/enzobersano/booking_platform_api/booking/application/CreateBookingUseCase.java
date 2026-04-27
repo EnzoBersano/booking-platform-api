@@ -1,5 +1,6 @@
 package com.enzobersano.booking_platform_api.booking.application;
 
+import com.enzobersano.booking_platform_api.auth.application.port.CurrentUserPort;
 import com.enzobersano.booking_platform_api.booking.application.command.CreateBookingCommand;
 import com.enzobersano.booking_platform_api.booking.application.port.BookingRepositoryPort;
 import com.enzobersano.booking_platform_api.booking.application.port.ResourceAvailabilityPort;
@@ -19,15 +20,17 @@ public class CreateBookingUseCase {
     private final BookingRepositoryPort repository;
     private final ResourceAvailabilityPort resourcePort;
     private final BookingPolicy bookingPolicy;
+    private final CurrentUserPort currentUserPort;
 
     public CreateBookingUseCase(
             BookingRepositoryPort repository,
             ResourceAvailabilityPort resourcePort,
-            BookingPolicy bookingPolicy
+            BookingPolicy bookingPolicy, CurrentUserPort currentUserPort
     ) {
         this.repository = repository;
         this.resourcePort = resourcePort;
         this.bookingPolicy = bookingPolicy;
+        this.currentUserPort = currentUserPort;
     }
 
     @Transactional
@@ -51,9 +54,10 @@ public class CreateBookingUseCase {
             );
         }
 
+        var userId = currentUserPort.getCurrentUserId();
         var booking = Booking.create(
                 command.resourceId(),
-                command.userId(),
+                userId,
                 timeRange
         );
 
