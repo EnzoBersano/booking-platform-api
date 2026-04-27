@@ -3,9 +3,7 @@ package com.enzobersano.booking_platform_api.booking.domain.failure;
 import com.enzobersano.booking_platform_api.shared.result.Failure;
 
 public sealed interface BookingFailure extends Failure
-        permits BookingFailure.NotFound,
-        BookingFailure.InvalidTimeRange,
-        BookingFailure.Conflict {
+        permits BookingFailure.Conflict, BookingFailure.InvalidSortBy, BookingFailure.InvalidSortDirection, BookingFailure.InvalidTimeRange, BookingFailure.NotFound {
 
     record NotFound() implements BookingFailure {
         @Override
@@ -25,6 +23,20 @@ public sealed interface BookingFailure extends Failure
         @Override
         public String message() {
             return "Booking conflict for resource " + resourceId + ": " + reason;
+        }
+    }
+
+    record InvalidSortBy(String value) implements BookingFailure {
+        @Override
+        public String message() {
+            return "Invalid sort field: " + value;
+        }
+    }
+
+    record InvalidSortDirection(String value) implements BookingFailure {
+        @Override
+        public String message() {
+            return "Invalid sort direction: " + value + ". Allowed: asc, desc";
         }
     }
 }
