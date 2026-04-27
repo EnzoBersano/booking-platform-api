@@ -34,9 +34,15 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/swagger-ui.html"
                         ).permitAll()
+                        // Resources
                         .requestMatchers(GET, "/api/resources/**").authenticated()
                         .requestMatchers(POST, "/api/resources/**").hasRole("ADMIN")
                         .requestMatchers(PATCH, "/api/resources/**").hasRole("ADMIN")
+
+                        // Bookings
+                        .requestMatchers(GET, "/api/bookings/**").authenticated()
+                        .requestMatchers(POST, "/api/bookings/**").authenticated()
+                        .requestMatchers(PATCH, "/api/bookings/**").authenticated()
 
                         .anyRequest().authenticated()
                 )
