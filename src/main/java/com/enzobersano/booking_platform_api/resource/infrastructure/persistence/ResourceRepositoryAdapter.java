@@ -3,7 +3,7 @@ package com.enzobersano.booking_platform_api.resource.infrastructure.persistence
 import com.enzobersano.booking_platform_api.resource.application.port.ResourceRepositoryPort;
 import com.enzobersano.booking_platform_api.resource.application.query.ListResourcesQuery;
 import com.enzobersano.booking_platform_api.resource.domain.model.Resource;
-import com.enzobersano.booking_platform_api.resource.domain.model.ResourceSortDirection;
+import com.enzobersano.booking_platform_api.resource.application.query.ResourceSortDirection;
 import com.enzobersano.booking_platform_api.resource.infrastructure.mapper.ResourceMapper;
 import com.enzobersano.booking_platform_api.shared.infrastructure.persistence.PageableFactory;
 import com.enzobersano.booking_platform_api.shared.pagination.PageResult;

@@ -6,8 +6,8 @@ import com.enzobersano.booking_platform_api.resource.application.port.ResourceRe
 import com.enzobersano.booking_platform_api.resource.application.query.ListResourcesQuery;
 import com.enzobersano.booking_platform_api.resource.domain.failure.ResourceFailure;
 import com.enzobersano.booking_platform_api.resource.domain.model.Resource;
-import com.enzobersano.booking_platform_api.resource.domain.model.ResourceSortBy;
-import com.enzobersano.booking_platform_api.resource.domain.model.ResourceSortDirection;
+import com.enzobersano.booking_platform_api.resource.application.query.ResourceSortBy;
+import com.enzobersano.booking_platform_api.resource.application.query.ResourceSortDirection;
 import com.enzobersano.booking_platform_api.resource.domain.model.ResourceStatus;
 import com.enzobersano.booking_platform_api.resource.domain.model.ResourceType;
 import com.enzobersano.booking_platform_api.shared.pagination.PageResult;

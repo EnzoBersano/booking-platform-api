@@ -3,8 +3,8 @@ package com.enzobersano.booking_platform_api.resource.api.mapper;
 import com.enzobersano.booking_platform_api.resource.api.dto.ListResourcesRequest;
 import com.enzobersano.booking_platform_api.resource.application.query.ListResourcesQuery;
 import com.enzobersano.booking_platform_api.resource.domain.failure.ResourceFailure;
-import com.enzobersano.booking_platform_api.resource.domain.model.ResourceSortBy;
-import com.enzobersano.booking_platform_api.resource.domain.model.ResourceSortDirection;
+import com.enzobersano.booking_platform_api.resource.application.query.ResourceSortBy;
+import com.enzobersano.booking_platform_api.resource.application.query.ResourceSortDirection;
 import com.enzobersano.booking_platform_api.shared.result.Result;
 import org.springframework.stereotype.Component;
 

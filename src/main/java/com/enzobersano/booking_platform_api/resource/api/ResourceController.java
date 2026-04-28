@@ -8,9 +8,6 @@ import com.enzobersano.booking_platform_api.resource.api.mapper.ResourceResponse
 import com.enzobersano.booking_platform_api.resource.application.*;
 import com.enzobersano.booking_platform_api.resource.application.command.CreateResourceCommand;
 import com.enzobersano.booking_platform_api.resource.application.command.DisableResourceCommand;
-import com.enzobersano.booking_platform_api.resource.application.query.ListResourcesQuery;
-import com.enzobersano.booking_platform_api.resource.domain.model.ResourceSortBy;
-import com.enzobersano.booking_platform_api.resource.domain.model.ResourceSortDirection;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.*;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;

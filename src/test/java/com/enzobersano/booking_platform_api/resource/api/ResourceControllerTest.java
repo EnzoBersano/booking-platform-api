@@ -12,8 +12,8 @@ import com.enzobersano.booking_platform_api.resource.domain.failure.ResourceFail
 import com.enzobersano.booking_platform_api.auth.infrastructure.security.JwtAuthenticationFilter;
 import com.enzobersano.booking_platform_api.auth.infrastructure.security.SecurityConfig;
 import com.enzobersano.booking_platform_api.resource.domain.model.Resource;
-import com.enzobersano.booking_platform_api.resource.domain.model.ResourceSortBy;
-import com.enzobersano.booking_platform_api.resource.domain.model.ResourceSortDirection;
+import com.enzobersano.booking_platform_api.resource.application.query.ResourceSortBy;
+import com.enzobersano.booking_platform_api.resource.application.query.ResourceSortDirection;
 import com.enzobersano.booking_platform_api.resource.domain.model.ResourceType;
 import com.enzobersano.booking_platform_api.shared.pagination.PageResult;
 import com.enzobersano.booking_platform_api.shared.result.Result;

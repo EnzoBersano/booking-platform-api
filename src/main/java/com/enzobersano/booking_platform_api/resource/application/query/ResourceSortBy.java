@@ -1,4 +1,4 @@
-package com.enzobersano.booking_platform_api.resource.domain.model;
+package com.enzobersano.booking_platform_api.resource.application.query;
 
 import com.enzobersano.booking_platform_api.resource.domain.failure.ResourceFailure;
 import com.enzobersano.booking_platform_api.shared.result.Result;
